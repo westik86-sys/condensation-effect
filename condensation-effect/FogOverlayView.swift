@@ -118,6 +118,8 @@ struct FogOverlayView: View {
 
             context.addFilter(.blur(radius: 14))
 
+            let wipeOpacity = 0.88
+
             if wipeTrail.stamps.count > 1 {
                 for (startStamp, endStamp) in zip(wipeTrail.stamps, wipeTrail.stamps.dropFirst()) {
                     guard endStamp.isContinuation else { continue }
@@ -134,7 +136,7 @@ struct FogOverlayView: View {
 
                     context.stroke(
                         path,
-                        with: .color(.black.opacity(Double(segmentStrength))),
+                        with: .color(.black.opacity(Double(segmentStrength) * wipeOpacity)),
                         style: StrokeStyle(
                             lineWidth: firstStamp.radius * 2,
                             lineCap: .round,
@@ -154,7 +156,10 @@ struct FogOverlayView: View {
                     width: stamp.radius * 2,
                     height: stamp.radius * 2
                 )
-                context.fill(Path(ellipseIn: rect), with: .color(.black.opacity(Double(strength))))
+                context.fill(
+                    Path(ellipseIn: rect),
+                    with: .color(.black.opacity(Double(strength) * wipeOpacity))
+                )
             }
         }
     }
@@ -162,39 +167,42 @@ struct FogOverlayView: View {
     private func fogAppearance(in size: CGSize) -> some View {
         ZStack {
             Rectangle()
-                .fill(.white.opacity(0.18))
+                .fill(.regularMaterial)
+
+            Rectangle()
+                .fill(.white.opacity(0.12))
 
             LinearGradient(
                 colors: [
-                    .white.opacity(0.22),
-                    .white.opacity(0.12),
-                    .white.opacity(0.18)
+                    .white.opacity(0.18),
+                    .white.opacity(0.08),
+                    .white.opacity(0.14)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
 
             Circle()
-                .fill(.white.opacity(0.20))
+                .fill(.white.opacity(0.16))
                 .frame(width: 260, height: 260)
                 .blur(radius: 70)
                 .offset(x: -110, y: -220)
 
             Circle()
-                .fill(.white.opacity(0.16))
+                .fill(.white.opacity(0.12))
                 .frame(width: 340, height: 340)
                 .blur(radius: 90)
                 .offset(x: 130, y: -40)
 
             Circle()
-                .fill(.white.opacity(0.18))
+                .fill(.white.opacity(0.14))
                 .frame(width: 280, height: 280)
                 .blur(radius: 80)
                 .offset(x: -30, y: 260)
         }
         .overlay {
             Rectangle()
-                .fill(.white.opacity(0.08))
+                .fill(.white.opacity(0.05))
         }
         .overlay {
             fogTextureOverlay
@@ -202,9 +210,9 @@ struct FogOverlayView: View {
         .overlay {
             LinearGradient(
                 colors: [
-                    .white.opacity(0.10),
+                    .white.opacity(0.08),
                     .clear,
-                    .white.opacity(0.07)
+                    .white.opacity(0.05)
                 ],
                 startPoint: .top,
                 endPoint: .bottom
