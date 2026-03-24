@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FogOverlayView: View {
+    private let textureConfiguration = FogTextureConfiguration.default
+
     let wipeTrail: WipeTrail
     let refogDate: Date
     let touchLocation: CGPoint?
@@ -187,6 +189,9 @@ struct FogOverlayView: View {
                 .offset(x: -30, y: 260)
         }
         .overlay {
+            fogTextureOverlay
+        }
+        .overlay {
             LinearGradient(
                 colors: [
                     .white.opacity(0.08),
@@ -198,9 +203,39 @@ struct FogOverlayView: View {
             )
         }
         .blur(radius: 8)
+        .distortionEffect(
+            ShaderLibrary.moistureRefraction(.float2(size)),
+            maxSampleOffset: CGSize(width: 2, height: 2)
+        )
         .colorEffect(
             ShaderLibrary.organicFog(.float2(size))
         )
+    }
+
+    @ViewBuilder
+    private var fogTextureOverlay: some View {
+        if let densityTexture = textureConfiguration.image(named: textureConfiguration.densityTextureName) {
+            densityTexture
+                .resizable()
+                .scaledToFill()
+                .opacity(0.08)
+                .blendMode(.multiply)
+        }
+
+        if let dropletTexture = textureConfiguration.image(named: textureConfiguration.dropletDetailTextureName) {
+            dropletTexture
+                .resizable(resizingMode: .tile)
+                .opacity(0.04)
+                .blendMode(.overlay)
+        }
+
+        if let distortionTexture = textureConfiguration.image(named: textureConfiguration.distortionTextureName) {
+            distortionTexture
+                .resizable()
+                .scaledToFill()
+                .opacity(0.03)
+                .blendMode(.softLight)
+        }
     }
 }
 

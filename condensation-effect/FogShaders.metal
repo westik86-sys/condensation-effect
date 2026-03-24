@@ -32,6 +32,18 @@ static float fogNoise(float2 uv) {
     return noise;
 }
 
+static float2 fogFlow(float2 uv) {
+    float x =
+        (valueNoise(uv * 4.1 + 3.2) - 0.5) * 2.0 +
+        (valueNoise(uv * 9.3 + 17.8) - 0.5) * 0.5;
+
+    float y =
+        (valueNoise(uv * 4.4 + 9.7) - 0.5) * 2.0 +
+        (valueNoise(uv * 8.6 + 23.4) - 0.5) * 0.5;
+
+    return float2(x, y);
+}
+
 [[ stitchable ]] half4 organicFog(float2 position, half4 color, float2 size) {
     if (size.x <= 0.0 || size.y <= 0.0) {
         return color;
@@ -56,4 +68,16 @@ static float fogNoise(float2 uv) {
     density = clamp(density, 0.82, 1.06);
 
     return half4(color.rgb, color.a * half(density));
+}
+
+[[ stitchable ]] float2 moistureRefraction(float2 position, float2 size) {
+    if (size.x <= 0.0 || size.y <= 0.0) {
+        return position;
+    }
+
+    float2 uv = position / size;
+    float2 flow = fogFlow(uv + float2(0.31, 0.14));
+    float2 offset = flow * float2(1.4, 1.1);
+
+    return position + offset;
 }
