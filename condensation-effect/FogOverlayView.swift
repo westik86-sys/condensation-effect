@@ -23,6 +23,9 @@ struct FogOverlayView: View {
                         wetEdgeOverlay
                     }
                     .overlay {
+                        flowOverlay
+                    }
+                    .overlay {
                         wipeMask
                             .blendMode(.destinationOut)
                     }
@@ -66,10 +69,24 @@ struct FogOverlayView: View {
             if let wetEdgeImage = simulationState.wetEdgeImage {
                 Image(decorative: wetEdgeImage, scale: 1)
                     .resizable()
-                    .interpolation(.high)
+                    .interpolation(.none)
                     .scaledToFill()
-                    .blur(radius: 10)
+                    .blur(radius: 8)
                     .blendMode(.screen)
+            }
+        }
+    }
+
+    private var flowOverlay: some View {
+        Group {
+            if let flowImage = simulationState.flowImage {
+                Image(decorative: flowImage, scale: 1)
+                    .resizable()
+                    .interpolation(.none)
+                    .scaledToFill()
+                    .blur(radius: 2)
+                    .opacity(0.12)
+                    .blendMode(.softLight)
             }
         }
     }
@@ -79,9 +96,9 @@ struct FogOverlayView: View {
             if let wipeMaskImage = simulationState.wipeMaskImage {
                 Image(decorative: wipeMaskImage, scale: 1)
                     .resizable()
-                    .interpolation(.high)
+                    .interpolation(.none)
                     .scaledToFill()
-                    .blur(radius: 14)
+                    .blur(radius: 12)
             }
         }
     }
@@ -158,7 +175,7 @@ struct FogOverlayView: View {
         if let condensationImage = simulationState.condensationImage {
             Image(decorative: condensationImage, scale: 1)
                 .resizable()
-                .interpolation(.high)
+                .interpolation(.none)
                 .scaledToFill()
                 .opacity(0.10)
                 .blendMode(.multiply)
@@ -167,9 +184,9 @@ struct FogOverlayView: View {
         if let heightImage = simulationState.heightImage {
             Image(decorative: heightImage, scale: 1)
                 .resizable()
-                .interpolation(.high)
+                .interpolation(.none)
                 .scaledToFill()
-                .opacity(0.06)
+                .opacity(0.04)
                 .blendMode(.softLight)
         }
     }

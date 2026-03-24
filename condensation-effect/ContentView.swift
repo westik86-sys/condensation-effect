@@ -13,7 +13,7 @@ struct ContentView: View {
     @State private var currentTouchLocation: CGPoint?
     @State private var isTrackingTouch = false
 
-    private let refogTimer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
+    private let refogTimer = Timer.publish(every: 0.25, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
@@ -47,7 +47,7 @@ struct ContentView: View {
             )
         }
         .onReceive(refogTimer) { _ in
-            simulationState.advance(by: 0.2)
+            simulationState.advance(by: 0.25)
         }
     }
 }

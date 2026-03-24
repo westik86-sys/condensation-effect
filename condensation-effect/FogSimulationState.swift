@@ -10,17 +10,19 @@ import Foundation
 import simd
 
 struct FogSimulationState {
-    private let width = 160
-    private let height = 320
+    private let width = 120
+    private let height = 240
 
     private(set) var condensation: [Float]
     private(set) var heightField: [Float]
     private(set) var wipeInfluence: [Float]
     private(set) var wetEdge: [Float]
+    private(set) var flowField: [Float]
     private(set) var condensationImage: CGImage?
     private(set) var heightImage: CGImage?
     private(set) var wipeMaskImage: CGImage?
     private(set) var wetEdgeImage: CGImage?
+    private(set) var flowImage: CGImage?
 
     private var lastTouchPoint: SIMD2<Float>?
 
@@ -30,6 +32,7 @@ struct FogSimulationState {
         heightField = Array(repeating: 0.55, count: pixelCount)
         wipeInfluence = Array(repeating: 0, count: pixelCount)
         wetEdge = Array(repeating: 0, count: pixelCount)
+        flowField = Array(repeating: 0, count: pixelCount)
         rebuildImages()
     }
 
@@ -58,20 +61,48 @@ struct FogSimulationState {
     mutating func advance(by deltaTime: TimeInterval) {
         guard deltaTime > 0 else { return }
 
-        let wipeDecay = Float(deltaTime / 12.0)
-        let wetEdgeDecay = Float(deltaTime / 6.0)
+        let wipeDecay = Float(deltaTime / 18.0)
+        let wetEdgeDecay = Float(deltaTime / 7.5)
+        let diffusionRate = Float(deltaTime * 1.6)
+        let wetEdgeDiffusionRate = Float(deltaTime * 0.9)
+        let depositionRate = Float(deltaTime / 22.0)
+        let ambientWetEdgeFloor: Float = 0
+
+        var nextWipeInfluence = wipeInfluence
+        var nextWetEdge = wetEdge
         var hasChanges = false
 
-        for index in wipeInfluence.indices {
-            let nextWipeValue = max(0, wipeInfluence[index] - wipeDecay)
-            let nextWetEdgeValue = max(0, wetEdge[index] - wetEdgeDecay)
+        for y in 0..<height {
+            for x in 0..<width {
+                let index = (y * width) + x
+                let localAverage = neighboringAverage(of: wipeInfluence, x: x, y: y)
+                let localWetEdgeAverage = neighboringAverage(of: wetEdge, x: x, y: y)
 
-            hasChanges = hasChanges || nextWipeValue != wipeInfluence[index] || nextWetEdgeValue != wetEdge[index]
-            wipeInfluence[index] = nextWipeValue
-            wetEdge[index] = nextWetEdgeValue
+                let diffusedWipe = wipeInfluence[index] + ((localAverage - wipeInfluence[index]) * diffusionRate)
+                let diffusedWetEdge = wetEdge[index] + ((localWetEdgeAverage - wetEdge[index]) * wetEdgeDiffusionRate)
+
+                let nextWipeValue = max(0, diffusedWipe - wipeDecay - depositionRate)
+                let nextWetEdgeValue = max(ambientWetEdgeFloor, diffusedWetEdge - wetEdgeDecay)
+
+                hasChanges = hasChanges || nextWipeValue != wipeInfluence[index] || nextWetEdgeValue != wetEdge[index]
+                nextWipeInfluence[index] = min(max(nextWipeValue, 0), 1)
+                nextWetEdge[index] = min(max(nextWetEdgeValue, 0), 1)
+            }
         }
 
+        let flowResult = applyGravityFlow(
+            wetEdge: nextWetEdge,
+            wipeInfluence: nextWipeInfluence,
+            deltaTime: deltaTime
+        )
+        nextWetEdge = flowResult.wetEdge
+        let nextFlowField = flowResult.flowField
+        hasChanges = hasChanges || flowResult.didFlow
+
         if hasChanges {
+            wipeInfluence = nextWipeInfluence
+            wetEdge = nextWetEdge
+            flowField = nextFlowField
             rebuildImages()
         }
     }
@@ -79,7 +110,7 @@ struct FogSimulationState {
     private mutating func stampSegment(from start: SIMD2<Float>, to end: SIMD2<Float>) {
         let delta = end - start
         let distance = simd_length(delta)
-        let stepCount = max(1, Int(ceil(distance * 220)))
+        let stepCount = max(1, Int(ceil(distance * 160)))
 
         for step in 0...stepCount {
             let progress = Float(step) / Float(stepCount)
@@ -136,12 +167,86 @@ struct FogSimulationState {
         heightImage = makeImage(from: heightField, rgb: (255, 255, 255))
         wipeMaskImage = makeImage(from: wipeInfluence, rgb: (0, 0, 0))
         wetEdgeImage = makeImage(from: wetEdge, rgb: (255, 255, 255))
+        flowImage = makeImage(from: flowField, rgb: (255, 255, 255))
+    }
+
+    private func applyGravityFlow(
+        wetEdge: [Float],
+        wipeInfluence: [Float],
+        deltaTime: TimeInterval
+    ) -> (wetEdge: [Float], flowField: [Float], didFlow: Bool) {
+        var nextWetEdge = wetEdge
+        var nextFlowField = flowField.map { $0 * 0.84 }
+        var didFlow = false
+
+        let gravityStrength = Float(deltaTime * 0.30)
+
+        for y in stride(from: height - 2, through: 0, by: -1) {
+            for x in 0..<width {
+                let index = (y * width) + x
+                let moisture = nextWetEdge[index] + (wipeInfluence[index] * 0.08)
+
+                guard moisture > 0.05 else { continue }
+
+                let horizontalDrift = driftDirection(forX: x, y: y)
+                let targetX = min(max(x + horizontalDrift, 0), width - 1)
+                let targetY = min(y + (moisture > 0.11 ? 2 : 1), height - 1)
+                let targetIndex = (targetY * width) + targetX
+
+                let transfer = min(
+                    nextWetEdge[index] * 0.16,
+                    max(0, (moisture - 0.04) * gravityStrength)
+                )
+
+                guard transfer > 0.0001 else { continue }
+
+                nextWetEdge[index] = max(0, nextWetEdge[index] - transfer)
+                nextWetEdge[targetIndex] = min(1, nextWetEdge[targetIndex] + (transfer * 0.95))
+                nextFlowField[targetIndex] = min(1, max(nextFlowField[targetIndex], transfer * 5.8))
+                didFlow = true
+            }
+        }
+
+        return (nextWetEdge, nextFlowField, didFlow)
+    }
+
+    private func driftDirection(forX x: Int, y: Int) -> Int {
+        let driftSeed = sin((Float(x) * 0.17) + (Float(y) * 0.03))
+
+        if driftSeed > 0.28 {
+            return 1
+        }
+
+        if driftSeed < -0.28 {
+            return -1
+        }
+
+        return 0
+    }
+
+    private func neighboringAverage(of field: [Float], x: Int, y: Int) -> Float {
+        let minX = max(0, x - 1)
+        let maxX = min(width - 1, x + 1)
+        let minY = max(0, y - 1)
+        let maxY = min(height - 1, y + 1)
+
+        var total: Float = 0
+        var count: Float = 0
+
+        for sampleY in minY...maxY {
+            for sampleX in minX...maxX {
+                total += field[(sampleY * width) + sampleX]
+                count += 1
+            }
+        }
+
+        return count > 0 ? (total / count) : 0
     }
 
     private mutating func rebuildDerivedFields() {
         for index in condensation.indices {
             let fogAmount = min(max(1 - wipeInfluence[index] + (wetEdge[index] * 0.18), 0), 1)
-            let surfaceHeight = min(max((fogAmount * 0.52) + (wetEdge[index] * 1.6), 0), 1)
+            let surfaceHeight = min(max((fogAmount * 0.52) + (wetEdge[index] * 1.6) + (flowField[index] * 0.55), 0), 1)
 
             condensation[index] = fogAmount
             heightField[index] = surfaceHeight
