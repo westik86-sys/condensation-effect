@@ -5,11 +5,15 @@
 //  Created by Pavel Korostelev on 24.03.2026.
 //
 
+import Combine
 import SwiftUI
 
 struct ContentView: View {
     @State private var wipeTrail = WipeTrail()
     @State private var currentTouchLocation: CGPoint?
+    @State private var refogDate = Date()
+
+    private let refogTimer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
@@ -29,6 +33,7 @@ struct ContentView: View {
 
             FogOverlayView(
                 wipeTrail: wipeTrail,
+                refogDate: refogDate,
                 touchLocation: currentTouchLocation,
                 onTouchChanged: { location in
                     wipeTrail.appendStamp(at: location)
@@ -38,6 +43,10 @@ struct ContentView: View {
                     currentTouchLocation = nil
                 }
             )
+        }
+        .onReceive(refogTimer) { date in
+            refogDate = date
+            wipeTrail.removeExpiredStamps(at: date)
         }
     }
 }

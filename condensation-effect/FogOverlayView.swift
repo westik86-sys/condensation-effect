@@ -9,6 +9,7 @@ import SwiftUI
 
 struct FogOverlayView: View {
     let wipeTrail: WipeTrail
+    let refogDate: Date
     let touchLocation: CGPoint?
     let onTouchChanged: (CGPoint) -> Void
     let onTouchEnded: () -> Void
@@ -66,25 +67,33 @@ struct FogOverlayView: View {
             context.addFilter(.blur(radius: 10))
 
             if wipeTrail.stamps.count > 1 {
-                var path = Path()
-                path.move(to: firstStamp.location)
-
-                for stamp in wipeTrail.stamps.dropFirst() {
-                    path.addLine(to: stamp.location)
-                }
-
-                context.stroke(
-                    path,
-                    with: .color(.white.opacity(0.14)),
-                    style: StrokeStyle(
-                        lineWidth: (firstStamp.radius * 2) + 10,
-                        lineCap: .round,
-                        lineJoin: .round
+                for (startStamp, endStamp) in zip(wipeTrail.stamps, wipeTrail.stamps.dropFirst()) {
+                    let segmentStrength = min(
+                        wipeTrail.strength(for: startStamp, at: refogDate),
+                        wipeTrail.strength(for: endStamp, at: refogDate)
                     )
-                )
+                    guard segmentStrength > 0 else { continue }
+
+                    var path = Path()
+                    path.move(to: startStamp.location)
+                    path.addLine(to: endStamp.location)
+
+                    context.stroke(
+                        path,
+                        with: .color(.white.opacity(0.14 * Double(segmentStrength))),
+                        style: StrokeStyle(
+                            lineWidth: (firstStamp.radius * 2) + 10,
+                            lineCap: .round,
+                            lineJoin: .round
+                        )
+                    )
+                }
             }
 
             for stamp in wipeTrail.stamps {
+                let strength = wipeTrail.strength(for: stamp, at: refogDate)
+                guard strength > 0 else { continue }
+
                 let rect = CGRect(
                     x: stamp.location.x - stamp.radius - 5,
                     y: stamp.location.y - stamp.radius - 5,
@@ -93,7 +102,7 @@ struct FogOverlayView: View {
                 )
                 context.fill(
                     Path(ellipseIn: rect),
-                    with: .color(.white.opacity(0.12))
+                    with: .color(.white.opacity(0.12 * Double(strength)))
                 )
             }
         }
@@ -106,32 +115,40 @@ struct FogOverlayView: View {
             context.addFilter(.blur(radius: 14))
 
             if wipeTrail.stamps.count > 1 {
-                var path = Path()
-                path.move(to: firstStamp.location)
-
-                for stamp in wipeTrail.stamps.dropFirst() {
-                    path.addLine(to: stamp.location)
-                }
-
-                context.stroke(
-                    path,
-                    with: .color(.black),
-                    style: StrokeStyle(
-                        lineWidth: firstStamp.radius * 2,
-                        lineCap: .round,
-                        lineJoin: .round
+                for (startStamp, endStamp) in zip(wipeTrail.stamps, wipeTrail.stamps.dropFirst()) {
+                    let segmentStrength = min(
+                        wipeTrail.strength(for: startStamp, at: refogDate),
+                        wipeTrail.strength(for: endStamp, at: refogDate)
                     )
-                )
+                    guard segmentStrength > 0 else { continue }
+
+                    var path = Path()
+                    path.move(to: startStamp.location)
+                    path.addLine(to: endStamp.location)
+
+                    context.stroke(
+                        path,
+                        with: .color(.black.opacity(Double(segmentStrength))),
+                        style: StrokeStyle(
+                            lineWidth: firstStamp.radius * 2,
+                            lineCap: .round,
+                            lineJoin: .round
+                        )
+                    )
+                }
             }
 
             for stamp in wipeTrail.stamps {
+                let strength = wipeTrail.strength(for: stamp, at: refogDate)
+                guard strength > 0 else { continue }
+
                 let rect = CGRect(
                     x: stamp.location.x - stamp.radius,
                     y: stamp.location.y - stamp.radius,
                     width: stamp.radius * 2,
                     height: stamp.radius * 2
                 )
-                context.fill(Path(ellipseIn: rect), with: .color(.black))
+                context.fill(Path(ellipseIn: rect), with: .color(.black.opacity(Double(strength))))
             }
         }
     }
@@ -199,6 +216,7 @@ struct FogOverlayView_Previews: PreviewProvider {
                     trail.appendStamp(at: CGPoint(x: 210, y: 300))
                     return trail
                 }(),
+                refogDate: Date(),
                 touchLocation: CGPoint(x: 160, y: 280),
                 onTouchChanged: { _ in },
                 onTouchEnded: { }
