@@ -18,6 +18,9 @@ struct FogOverlayView: View {
             ZStack {
                 fogAppearance(in: geometry.size)
                     .overlay {
+                        wetEdgeOverlay
+                    }
+                    .overlay {
                         wipeMask
                             .blendMode(.destinationOut)
                     }
@@ -54,6 +57,46 @@ struct FogOverlayView: View {
             }
         }
         .ignoresSafeArea()
+    }
+
+    private var wetEdgeOverlay: some View {
+        Canvas { context, _ in
+            guard let firstStamp = wipeTrail.stamps.first else { return }
+
+            context.addFilter(.blur(radius: 10))
+
+            if wipeTrail.stamps.count > 1 {
+                var path = Path()
+                path.move(to: firstStamp.location)
+
+                for stamp in wipeTrail.stamps.dropFirst() {
+                    path.addLine(to: stamp.location)
+                }
+
+                context.stroke(
+                    path,
+                    with: .color(.white.opacity(0.14)),
+                    style: StrokeStyle(
+                        lineWidth: (firstStamp.radius * 2) + 10,
+                        lineCap: .round,
+                        lineJoin: .round
+                    )
+                )
+            }
+
+            for stamp in wipeTrail.stamps {
+                let rect = CGRect(
+                    x: stamp.location.x - stamp.radius - 5,
+                    y: stamp.location.y - stamp.radius - 5,
+                    width: (stamp.radius * 2) + 10,
+                    height: (stamp.radius * 2) + 10
+                )
+                context.fill(
+                    Path(ellipseIn: rect),
+                    with: .color(.white.opacity(0.12))
+                )
+            }
+        }
     }
 
     private var wipeMask: some View {
