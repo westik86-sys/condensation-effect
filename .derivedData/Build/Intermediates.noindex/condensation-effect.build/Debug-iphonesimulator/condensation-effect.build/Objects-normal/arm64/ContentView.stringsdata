@@ -1,0 +1,24 @@
+{
+  "source": "/Users/p.korostelev/Desktop/condensation-effect/condensation-effect/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Fogged Glass",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 19
+        }
+      },
+      {
+        "comment": "",
+        "key": "Prototype base layer",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 23
+        }
+      }
+    ]
+  },
+  "version": 1
+}

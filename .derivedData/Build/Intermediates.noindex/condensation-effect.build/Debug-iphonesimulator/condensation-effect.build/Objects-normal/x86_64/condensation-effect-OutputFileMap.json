@@ -1,0 +1,49 @@
+{
+  "" : {
+    "diagnostics" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation-effect-primary.dia",
+    "emit-module-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation-effect-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation-effect-primary-emit-module.dia",
+    "pch" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation-effect-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation-effect-primary.swiftdeps"
+  },
+  "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/GeneratedAssetSymbols~partial.swiftmodule"
+  },
+  "/Users/p.korostelev/Desktop/condensation-effect/condensation-effect/ContentView.swift" : {
+    "const-values" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView.d",
+    "diagnostics" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView.dia",
+    "index-unit-output-path" : "/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView.o",
+    "llvm-bc" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView.bc",
+    "object" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView.o",
+    "swift-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/ContentView~partial.swiftmodule"
+  },
+  "/Users/p.korostelev/Desktop/condensation-effect/condensation-effect/FogOverlayView.swift" : {
+    "const-values" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.swiftconstvalues",
+    "dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.d",
+    "diagnostics" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.dia",
+    "index-unit-output-path" : "/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.o",
+    "llvm-bc" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.bc",
+    "object" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.o",
+    "swift-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.swiftdeps",
+    "swiftmodule" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView~partial.swiftmodule"
+  },
+  "/Users/p.korostelev/Desktop/condensation-effect/condensation-effect/condensation_effectApp.swift" : {
+    "const-values" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.swiftconstvalues",
+    "dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.d",
+    "diagnostics" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.dia",
+    "index-unit-output-path" : "/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.o",
+    "llvm-bc" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.bc",
+    "object" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.o",
+    "swift-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.swiftdeps",
+    "swiftmodule" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp~partial.swiftmodule"
+  }
+}

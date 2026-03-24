@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var currentTouchLocation: CGPoint?
+
     var body: some View {
         ZStack {
             Color(red: 0.10, green: 0.14, blue: 0.18)
@@ -24,7 +26,15 @@ struct ContentView: View {
             }
             .multilineTextAlignment(.center)
 
-            FogOverlayView()
+            FogOverlayView(
+                touchLocation: currentTouchLocation,
+                onTouchChanged: { location in
+                    currentTouchLocation = location
+                },
+                onTouchEnded: {
+                    currentTouchLocation = nil
+                }
+            )
         }
     }
 }

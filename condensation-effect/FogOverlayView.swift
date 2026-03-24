@@ -8,7 +8,49 @@
 import SwiftUI
 
 struct FogOverlayView: View {
+    let touchLocation: CGPoint?
+    let onTouchChanged: (CGPoint) -> Void
+    let onTouchEnded: () -> Void
+
     var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                fogAppearance
+
+                if let touchLocation {
+                    Circle()
+                        .fill(.white.opacity(0.9))
+                        .frame(width: 18, height: 18)
+                        .overlay {
+                            Circle()
+                                .stroke(.white.opacity(0.4), lineWidth: 8)
+                        }
+                        .shadow(color: .white.opacity(0.35), radius: 14)
+                        .position(touchLocation)
+                }
+
+                Rectangle()
+                    .fill(.clear)
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                            .onChanged { value in
+                                let clampedLocation = CGPoint(
+                                    x: min(max(value.location.x, 0), geometry.size.width),
+                                    y: min(max(value.location.y, 0), geometry.size.height)
+                                )
+                                onTouchChanged(clampedLocation)
+                            }
+                            .onEnded { _ in
+                                onTouchEnded()
+                            }
+                    )
+            }
+        }
+        .ignoresSafeArea()
+    }
+
+    private var fogAppearance: some View {
         ZStack {
             Rectangle()
                 .fill(.white.opacity(0.12))
@@ -54,8 +96,6 @@ struct FogOverlayView: View {
         }
         .compositingGroup()
         .blur(radius: 8)
-        .ignoresSafeArea()
-        .allowsHitTesting(false)
     }
 }
 
@@ -63,7 +103,11 @@ struct FogOverlayView_Previews: PreviewProvider {
     static var previews: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            FogOverlayView()
+            FogOverlayView(
+                touchLocation: CGPoint(x: 160, y: 280),
+                onTouchChanged: { _ in },
+                onTouchEnded: { }
+            )
         }
     }
 }
