@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FogOverlayView: View {
+    let wipeTrail: WipeTrail
     let touchLocation: CGPoint?
     let onTouchChanged: (CGPoint) -> Void
     let onTouchEnded: () -> Void
@@ -16,6 +17,17 @@ struct FogOverlayView: View {
         GeometryReader { geometry in
             ZStack {
                 fogAppearance
+
+                ForEach(wipeTrail.stamps) { stamp in
+                    Circle()
+                        .fill(.white.opacity(0.28))
+                        .frame(width: stamp.radius * 2, height: stamp.radius * 2)
+                        .overlay {
+                            Circle()
+                                .stroke(.white.opacity(0.20), lineWidth: 1)
+                        }
+                        .position(stamp.location)
+                }
 
                 if let touchLocation {
                     Circle()
@@ -104,6 +116,13 @@ struct FogOverlayView_Previews: PreviewProvider {
         ZStack {
             Color.black.ignoresSafeArea()
             FogOverlayView(
+                wipeTrail: {
+                    var trail = WipeTrail()
+                    trail.appendStamp(at: CGPoint(x: 120, y: 220))
+                    trail.appendStamp(at: CGPoint(x: 160, y: 260))
+                    trail.appendStamp(at: CGPoint(x: 210, y: 300))
+                    return trail
+                }(),
                 touchLocation: CGPoint(x: 160, y: 280),
                 onTouchChanged: { _ in },
                 onTouchEnded: { }

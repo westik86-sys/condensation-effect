@@ -7,7 +7,7 @@
         "key": "Fogged Glass",
         "location": {
           "startingColumn": 22,
-          "startingLine": 19
+          "startingLine": 20
         }
       },
       {
@@ -15,7 +15,7 @@
         "key": "Prototype base layer",
         "location": {
           "startingColumn": 22,
-          "startingLine": 23
+          "startingLine": 24
         }
       }
     ]

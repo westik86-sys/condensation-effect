@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var wipeTrail = WipeTrail()
     @State private var currentTouchLocation: CGPoint?
 
     var body: some View {
@@ -27,8 +28,10 @@ struct ContentView: View {
             .multilineTextAlignment(.center)
 
             FogOverlayView(
+                wipeTrail: wipeTrail,
                 touchLocation: currentTouchLocation,
                 onTouchChanged: { location in
+                    wipeTrail.appendStamp(at: location)
                     currentTouchLocation = location
                 },
                 onTouchEnded: {
