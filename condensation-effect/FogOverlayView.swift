@@ -123,6 +123,9 @@ struct FogOverlayView: View {
                 .offset(x: -30, y: 260)
         }
         .overlay {
+            simulationTextureOverlay
+        }
+        .overlay {
             Rectangle()
                 .fill(.white.opacity(0.05))
         }
@@ -148,6 +151,27 @@ struct FogOverlayView: View {
         .colorEffect(
             ShaderLibrary.organicFog(.float2(size))
         )
+    }
+
+    @ViewBuilder
+    private var simulationTextureOverlay: some View {
+        if let condensationImage = simulationState.condensationImage {
+            Image(decorative: condensationImage, scale: 1)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFill()
+                .opacity(0.10)
+                .blendMode(.multiply)
+        }
+
+        if let heightImage = simulationState.heightImage {
+            Image(decorative: heightImage, scale: 1)
+                .resizable()
+                .interpolation(.high)
+                .scaledToFill()
+                .opacity(0.06)
+                .blendMode(.softLight)
+        }
     }
 
     @ViewBuilder

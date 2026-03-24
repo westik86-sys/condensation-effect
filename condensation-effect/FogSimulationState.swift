@@ -13,8 +13,12 @@ struct FogSimulationState {
     private let width = 160
     private let height = 320
 
+    private(set) var condensation: [Float]
+    private(set) var heightField: [Float]
     private(set) var wipeInfluence: [Float]
     private(set) var wetEdge: [Float]
+    private(set) var condensationImage: CGImage?
+    private(set) var heightImage: CGImage?
     private(set) var wipeMaskImage: CGImage?
     private(set) var wetEdgeImage: CGImage?
 
@@ -22,8 +26,11 @@ struct FogSimulationState {
 
     init() {
         let pixelCount = width * height
+        condensation = Array(repeating: 1, count: pixelCount)
+        heightField = Array(repeating: 0.55, count: pixelCount)
         wipeInfluence = Array(repeating: 0, count: pixelCount)
         wetEdge = Array(repeating: 0, count: pixelCount)
+        rebuildImages()
     }
 
     mutating func applyTouch(at location: CGPoint, in size: CGSize, isContinuation: Bool) {
@@ -124,8 +131,21 @@ struct FogSimulationState {
     }
 
     private mutating func rebuildImages() {
+        rebuildDerivedFields()
+        condensationImage = makeImage(from: condensation, rgb: (255, 255, 255))
+        heightImage = makeImage(from: heightField, rgb: (255, 255, 255))
         wipeMaskImage = makeImage(from: wipeInfluence, rgb: (0, 0, 0))
         wetEdgeImage = makeImage(from: wetEdge, rgb: (255, 255, 255))
+    }
+
+    private mutating func rebuildDerivedFields() {
+        for index in condensation.indices {
+            let fogAmount = min(max(1 - wipeInfluence[index] + (wetEdge[index] * 0.18), 0), 1)
+            let surfaceHeight = min(max((fogAmount * 0.52) + (wetEdge[index] * 1.6), 0), 1)
+
+            condensation[index] = fogAmount
+            heightField[index] = surfaceHeight
+        }
     }
 
     private func makeImage(from field: [Float], rgb: (UInt8, UInt8, UInt8)) -> CGImage? {
