@@ -5,6 +5,49 @@
 	<key>logFormatVersion</key>
 	<integer>12</integer>
 	<key>logs</key>
-	<dict/>
+	<dict>
+		<key>4FB42E33-CF50-4622-80B1-629A47C9D96D</key>
+		<dict>
+			<key>className</key>
+			<string>IDECommandLineBuildLog</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.BuildLog</string>
+			<key>fileName</key>
+			<string>4FB42E33-CF50-4622-80B1-629A47C9D96D.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>E</string>
+				<key>totalNumberOfAnalyzerIssues</key>
+				<integer>0</integer>
+				<key>totalNumberOfErrors</key>
+				<integer>1</integer>
+				<key>totalNumberOfTestFailures</key>
+				<integer>0</integer>
+				<key>totalNumberOfWarnings</key>
+				<integer>1</integer>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>condensation-effect project</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>condensation-effect</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>1</integer>
+			<key>signature</key>
+			<string>Building project condensation-effect with scheme condensation-effect</string>
+			<key>timeStartedRecording</key>
+			<real>796038138.41724098</real>
+			<key>timeStoppedRecording</key>
+			<real>796038152.41197705</real>
+			<key>title</key>
+			<string>Building project condensation-effect with scheme condensation-effect</string>
+			<key>uniqueIdentifier</key>
+			<string>4FB42E33-CF50-4622-80B1-629A47C9D96D</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

@@ -36,6 +36,16 @@
     "swift-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView.swiftdeps",
     "swiftmodule" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/FogOverlayView~partial.swiftmodule"
   },
+  "/Users/p.korostelev/Desktop/condensation-effect/condensation-effect/WipeTrail.swift" : {
+    "const-values" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail.swiftconstvalues",
+    "dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail.d",
+    "diagnostics" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail.dia",
+    "index-unit-output-path" : "/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail.o",
+    "llvm-bc" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail.bc",
+    "object" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail.o",
+    "swift-dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail.swiftdeps",
+    "swiftmodule" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/WipeTrail~partial.swiftmodule"
+  },
   "/Users/p.korostelev/Desktop/condensation-effect/condensation-effect/condensation_effectApp.swift" : {
     "const-values" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.swiftconstvalues",
     "dependencies" : "/Users/p.korostelev/Desktop/condensation-effect/.derivedData/Build/Intermediates.noindex/condensation-effect.build/Debug-iphonesimulator/condensation-effect.build/Objects-normal/x86_64/condensation_effectApp.d",

@@ -16,18 +16,12 @@ struct FogOverlayView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                fogAppearance
-
-                ForEach(wipeTrail.stamps) { stamp in
-                    Circle()
-                        .fill(.white.opacity(0.28))
-                        .frame(width: stamp.radius * 2, height: stamp.radius * 2)
-                        .overlay {
-                            Circle()
-                                .stroke(.white.opacity(0.20), lineWidth: 1)
-                        }
-                        .position(stamp.location)
-                }
+                fogAppearance(in: geometry.size)
+                    .overlay {
+                        wipeMask
+                            .blendMode(.destinationOut)
+                    }
+                    .compositingGroup()
 
                 if let touchLocation {
                     Circle()
@@ -62,7 +56,44 @@ struct FogOverlayView: View {
         .ignoresSafeArea()
     }
 
-    private var fogAppearance: some View {
+    private var wipeMask: some View {
+        Canvas { context, _ in
+            guard let firstStamp = wipeTrail.stamps.first else { return }
+
+            context.addFilter(.blur(radius: 14))
+
+            if wipeTrail.stamps.count > 1 {
+                var path = Path()
+                path.move(to: firstStamp.location)
+
+                for stamp in wipeTrail.stamps.dropFirst() {
+                    path.addLine(to: stamp.location)
+                }
+
+                context.stroke(
+                    path,
+                    with: .color(.black),
+                    style: StrokeStyle(
+                        lineWidth: firstStamp.radius * 2,
+                        lineCap: .round,
+                        lineJoin: .round
+                    )
+                )
+            }
+
+            for stamp in wipeTrail.stamps {
+                let rect = CGRect(
+                    x: stamp.location.x - stamp.radius,
+                    y: stamp.location.y - stamp.radius,
+                    width: stamp.radius * 2,
+                    height: stamp.radius * 2
+                )
+                context.fill(Path(ellipseIn: rect), with: .color(.black))
+            }
+        }
+    }
+
+    private func fogAppearance(in size: CGSize) -> some View {
         ZStack {
             Rectangle()
                 .fill(.white.opacity(0.12))
@@ -106,8 +137,10 @@ struct FogOverlayView: View {
                 endPoint: .bottom
             )
         }
-        .compositingGroup()
         .blur(radius: 8)
+        .colorEffect(
+            ShaderLibrary.organicFog(.float2(size))
+        )
     }
 }
 
