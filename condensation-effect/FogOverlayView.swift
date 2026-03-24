@@ -10,10 +10,9 @@ import SwiftUI
 struct FogOverlayView: View {
     private let textureConfiguration = FogTextureConfiguration.default
 
-    let wipeTrail: WipeTrail
-    let refogDate: Date
+    let simulationState: FogSimulationState
     let touchLocation: CGPoint?
-    let onTouchChanged: (CGPoint) -> Void
+    let onTouchChanged: (CGPoint, CGSize) -> Void
     let onTouchEnded: () -> Void
 
     var body: some View {
@@ -51,7 +50,7 @@ struct FogOverlayView: View {
                                     x: min(max(value.location.x, 0), geometry.size.width),
                                     y: min(max(value.location.y, 0), geometry.size.height)
                                 )
-                                onTouchChanged(clampedLocation)
+                                onTouchChanged(clampedLocation, geometry.size)
                             }
                             .onEnded { _ in
                                 onTouchEnded()
@@ -63,103 +62,26 @@ struct FogOverlayView: View {
     }
 
     private var wetEdgeOverlay: some View {
-        Canvas { context, _ in
-            guard let firstStamp = wipeTrail.stamps.first else { return }
-
-            context.addFilter(.blur(radius: 10))
-
-            if wipeTrail.stamps.count > 1 {
-                for (startStamp, endStamp) in zip(wipeTrail.stamps, wipeTrail.stamps.dropFirst()) {
-                    guard endStamp.isContinuation else { continue }
-
-                    let segmentStrength = min(
-                        wipeTrail.strength(for: startStamp, at: refogDate),
-                        wipeTrail.strength(for: endStamp, at: refogDate)
-                    )
-                    guard segmentStrength > 0 else { continue }
-
-                    var path = Path()
-                    path.move(to: startStamp.location)
-                    path.addLine(to: endStamp.location)
-
-                    context.stroke(
-                        path,
-                        with: .color(.white.opacity(0.14 * Double(segmentStrength))),
-                        style: StrokeStyle(
-                            lineWidth: (firstStamp.radius * 2) + 10,
-                            lineCap: .round,
-                            lineJoin: .round
-                        )
-                    )
-                }
-            }
-
-            for stamp in wipeTrail.stamps {
-                let strength = wipeTrail.strength(for: stamp, at: refogDate)
-                guard strength > 0 else { continue }
-
-                let rect = CGRect(
-                    x: stamp.location.x - stamp.radius - 5,
-                    y: stamp.location.y - stamp.radius - 5,
-                    width: (stamp.radius * 2) + 10,
-                    height: (stamp.radius * 2) + 10
-                )
-                context.fill(
-                    Path(ellipseIn: rect),
-                    with: .color(.white.opacity(0.12 * Double(strength)))
-                )
+        Group {
+            if let wetEdgeImage = simulationState.wetEdgeImage {
+                Image(decorative: wetEdgeImage, scale: 1)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFill()
+                    .blur(radius: 10)
+                    .blendMode(.screen)
             }
         }
     }
 
     private var wipeMask: some View {
-        Canvas { context, _ in
-            guard let firstStamp = wipeTrail.stamps.first else { return }
-
-            context.addFilter(.blur(radius: 14))
-
-            let wipeOpacity = 0.88
-
-            if wipeTrail.stamps.count > 1 {
-                for (startStamp, endStamp) in zip(wipeTrail.stamps, wipeTrail.stamps.dropFirst()) {
-                    guard endStamp.isContinuation else { continue }
-
-                    let segmentStrength = min(
-                        wipeTrail.strength(for: startStamp, at: refogDate),
-                        wipeTrail.strength(for: endStamp, at: refogDate)
-                    )
-                    guard segmentStrength > 0 else { continue }
-
-                    var path = Path()
-                    path.move(to: startStamp.location)
-                    path.addLine(to: endStamp.location)
-
-                    context.stroke(
-                        path,
-                        with: .color(.black.opacity(Double(segmentStrength) * wipeOpacity)),
-                        style: StrokeStyle(
-                            lineWidth: firstStamp.radius * 2,
-                            lineCap: .round,
-                            lineJoin: .round
-                        )
-                    )
-                }
-            }
-
-            for stamp in wipeTrail.stamps {
-                let strength = wipeTrail.strength(for: stamp, at: refogDate)
-                guard strength > 0 else { continue }
-
-                let rect = CGRect(
-                    x: stamp.location.x - stamp.radius,
-                    y: stamp.location.y - stamp.radius,
-                    width: stamp.radius * 2,
-                    height: stamp.radius * 2
-                )
-                context.fill(
-                    Path(ellipseIn: rect),
-                    with: .color(.black.opacity(Double(strength) * wipeOpacity))
-                )
+        Group {
+            if let wipeMaskImage = simulationState.wipeMaskImage {
+                Image(decorative: wipeMaskImage, scale: 1)
+                    .resizable()
+                    .interpolation(.high)
+                    .scaledToFill()
+                    .blur(radius: 14)
             }
         }
     }
@@ -260,16 +182,16 @@ struct FogOverlayView_Previews: PreviewProvider {
         ZStack {
             Color.black.ignoresSafeArea()
             FogOverlayView(
-                wipeTrail: {
-                    var trail = WipeTrail()
-                    trail.appendStamp(at: CGPoint(x: 120, y: 220), isContinuation: false)
-                    trail.appendStamp(at: CGPoint(x: 160, y: 260))
-                    trail.appendStamp(at: CGPoint(x: 210, y: 300))
-                    return trail
+                simulationState: {
+                    var state = FogSimulationState()
+                    let previewSize = CGSize(width: 320, height: 640)
+                    state.applyTouch(at: CGPoint(x: 120, y: 220), in: previewSize, isContinuation: false)
+                    state.applyTouch(at: CGPoint(x: 160, y: 260), in: previewSize, isContinuation: true)
+                    state.applyTouch(at: CGPoint(x: 210, y: 300), in: previewSize, isContinuation: true)
+                    return state
                 }(),
-                refogDate: Date(),
                 touchLocation: CGPoint(x: 160, y: 280),
-                onTouchChanged: { _ in },
+                onTouchChanged: { _, _ in },
                 onTouchEnded: { }
             )
         }

@@ -9,9 +9,8 @@ import Combine
 import SwiftUI
 
 struct ContentView: View {
-    @State private var wipeTrail = WipeTrail()
+    @State private var simulationState = FogSimulationState()
     @State private var currentTouchLocation: CGPoint?
-    @State private var refogDate = Date()
     @State private var isTrackingTouch = false
 
     private let refogTimer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
@@ -33,23 +32,22 @@ struct ContentView: View {
             .multilineTextAlignment(.center)
 
             FogOverlayView(
-                wipeTrail: wipeTrail,
-                refogDate: refogDate,
+                simulationState: simulationState,
                 touchLocation: currentTouchLocation,
-                onTouchChanged: { location in
-                    wipeTrail.appendStamp(at: location, isContinuation: isTrackingTouch)
+                onTouchChanged: { location, size in
+                    simulationState.applyTouch(at: location, in: size, isContinuation: isTrackingTouch)
                     currentTouchLocation = location
                     isTrackingTouch = true
                 },
                 onTouchEnded: {
                     currentTouchLocation = nil
+                    simulationState.endInteraction()
                     isTrackingTouch = false
                 }
             )
         }
-        .onReceive(refogTimer) { date in
-            refogDate = date
-            wipeTrail.removeExpiredStamps(at: date)
+        .onReceive(refogTimer) { _ in
+            simulationState.advance(by: 0.2)
         }
     }
 }
