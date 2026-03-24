@@ -9,16 +9,28 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ZStack {
+            Color(red: 0.10, green: 0.14, blue: 0.18)
+                .ignoresSafeArea()
+
+            VStack(spacing: 8) {
+                Text("Fogged Glass")
+                    .font(.largeTitle.weight(.semibold))
+                    .foregroundStyle(.white)
+
+                Text("Prototype base layer")
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.75))
+            }
+            .multilineTextAlignment(.center)
+
+            FogOverlayView()
         }
-        .padding()
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
