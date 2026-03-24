@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var wipeTrail = WipeTrail()
     @State private var currentTouchLocation: CGPoint?
     @State private var refogDate = Date()
+    @State private var isTrackingTouch = false
 
     private let refogTimer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
 
@@ -36,11 +37,13 @@ struct ContentView: View {
                 refogDate: refogDate,
                 touchLocation: currentTouchLocation,
                 onTouchChanged: { location in
-                    wipeTrail.appendStamp(at: location)
+                    wipeTrail.appendStamp(at: location, isContinuation: isTrackingTouch)
                     currentTouchLocation = location
+                    isTrackingTouch = true
                 },
                 onTouchEnded: {
                     currentTouchLocation = nil
+                    isTrackingTouch = false
                 }
             )
         }

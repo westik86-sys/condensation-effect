@@ -13,14 +13,32 @@ struct WipeStamp: Identifiable {
     let location: CGPoint
     let radius: CGFloat
     let createdAt: Date
+    let isContinuation: Bool
 }
 
 struct WipeTrail {
     private(set) var stamps: [WipeStamp] = []
     let refogDuration: TimeInterval = 12
 
-    mutating func appendStamp(at location: CGPoint, radius: CGFloat = 24, minimumSpacing: CGFloat = 12) {
+    mutating func appendStamp(
+        at location: CGPoint,
+        radius: CGFloat = 24,
+        minimumSpacing: CGFloat = 12,
+        isContinuation: Bool = true
+    ) {
         if let lastStamp = stamps.last {
+            if !isContinuation {
+                stamps.append(
+                    WipeStamp(
+                        location: location,
+                        radius: radius,
+                        createdAt: Date(),
+                        isContinuation: false
+                    )
+                )
+                return
+            }
+
             let deltaX = location.x - lastStamp.location.x
             let deltaY = location.y - lastStamp.location.y
             let distance = sqrt((deltaX * deltaX) + (deltaY * deltaY))
@@ -28,7 +46,14 @@ struct WipeTrail {
             guard distance >= minimumSpacing else { return }
         }
 
-        stamps.append(WipeStamp(location: location, radius: radius, createdAt: Date()))
+        stamps.append(
+            WipeStamp(
+                location: location,
+                radius: radius,
+                createdAt: Date(),
+                isContinuation: isContinuation
+            )
+        )
     }
 
     mutating func removeExpiredStamps(at date: Date = Date()) {
